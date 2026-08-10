@@ -67,6 +67,10 @@ class CartPage extends BasePage {
   async getTotal() {
     return this.getNumber(this.total);
   }
+
+  async proceedToCheckout() {
+    await this.clickOn(this.proceedButton);
+  }
 }
 
 export default new CartPage();

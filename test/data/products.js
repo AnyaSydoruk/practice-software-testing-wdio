@@ -5,7 +5,7 @@ export const PRODUCT = {
 };
 
 export const CART_PRODUCT = {
-  name: "Combination Pliers",
+  name: "Pliers",
 };
 
 export const HAND_TOOLS_SUBCATEGORIES = [

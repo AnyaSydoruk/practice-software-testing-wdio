@@ -24,28 +24,28 @@ class AccountPage extends BasePage {
   get firstNameInput() {
     return $('app-profile [data-test="first-name"]');
   }
-
   get phoneInput() {
     return $('app-profile [data-test="phone"]');
   }
-
   get updateButton() {
     return $('[data-test="update-profile-submit"]');
+  }
+
+  get successAlert() {
+    return $("app-profile .alert-success");
+  }
+  get dangerAlert() {
+    return $("app-profile .alert-danger");
   }
 
   get favoriteNames() {
     return $$('[data-test^="favorite-"] [data-test="product-name"]');
   }
-
   get favoriteCards() {
     return $$('[data-test^="favorite-"]');
   }
   get deleteButtons() {
     return $$('[data-test^="favorite-"] [data-test="delete"]');
-  }
-
-  get successAlert() {
-    return $("app-profile .alert-success");
   }
 
   open() {
@@ -58,14 +58,6 @@ class AccountPage extends BasePage {
     return super.open("account/favorites");
   }
 
-  async waitForProfileLoaded() {
-    await this.firstNameInput.waitForDisplayed();
-    await browser.waitUntil(
-      async () => (await this.firstNameInput.getValue()).length > 0,
-      { timeoutMsg: "Profile form did not load user data" },
-    );
-  }
-
   async getUserName() {
     await this.userMenu.waitForDisplayed();
     return (await this.userMenu.getText()).trim();
@@ -76,32 +68,36 @@ class AccountPage extends BasePage {
     return (await this.pageTitle.getText()).trim();
   }
 
+  async waitForProfileLoaded() {
+    await this.firstNameInput.waitForDisplayed();
+    await browser.waitUntil(
+      async () => (await this.firstNameInput.getValue()).length > 0,
+      { timeoutMsg: "Profile form did not load user data" },
+    );
+  }
+
   async getPhone() {
+    await this.waitForProfileLoaded();
     return this.phoneInput.getValue();
   }
 
   async updatePhone(phone) {
     await this.waitForProfileLoaded();
+    await this.setNgValue(this.phoneInput, phone);
+    await this.clickOn(this.updateButton);
 
-    await browser.execute(
-      (el, v) => {
-        const setter = Object.getOwnPropertyDescriptor(
-          window.HTMLInputElement.prototype,
-          "value",
-        ).set;
-        setter.call(el, String(v));
-        el.dispatchEvent(new Event("input", { bubbles: true }));
-        el.dispatchEvent(new Event("change", { bubbles: true }));
-        el.blur();
-      },
-      await this.phoneInput,
-      phone,
+    await browser.waitUntil(
+      async () =>
+        (await this.successAlert.isDisplayed()) ||
+        (await this.dangerAlert.isDisplayed()),
+      { timeoutMsg: "No response after profile update" },
     );
 
-    await this.clickOn(this.updateButton);
-    await this.successAlert.waitForDisplayed({
-      timeoutMsg: "No success message after profile update",
-    });
+    if (await this.dangerAlert.isDisplayed()) {
+      throw new Error(
+        `Profile update failed: ${(await this.dangerAlert.getText()).trim()}`,
+      );
+    }
   }
 
   async waitForFavorites() {

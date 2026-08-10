@@ -66,4 +66,22 @@ export default class BasePage {
   async getSelectedLanguage() {
     return (await this.languageSelect.getText()).trim();
   }
+
+  async setNgValue(element, value) {
+    await element.waitForDisplayed();
+    await browser.execute(
+      (el, v) => {
+        const setter = Object.getOwnPropertyDescriptor(
+          window.HTMLInputElement.prototype,
+          "value",
+        ).set;
+        setter.call(el, String(v));
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+        el.blur();
+      },
+      await element,
+      value,
+    );
+  }
 }

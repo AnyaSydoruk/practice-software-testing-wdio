@@ -1,14 +1,13 @@
 import { expect, assert } from "chai";
-import LoginPage from "../po/login.page.js";
 import AccountPage from "../po/account.page.js";
 import HomePage from "../po/home.page.js";
 import ProductPage from "../po/product.page.js";
-import { EXISTING_USER } from "../data/users.js";
+import { createAndLoginUser } from "../utils/user.helper.js";
 import { PRODUCT } from "../data/products.js";
 
 describe("Account", () => {
   before(async () => {
-    await LoginPage.loginAs(EXISTING_USER);
+    await createAndLoginUser();
   });
 
   describe("Scenario: User updates the profile details", () => {
