@@ -2,8 +2,6 @@ import { assert } from "chai";
 import HomePage from "../po/home.page.js";
 import { LANG, HEADER_DE } from "../data/products.js";
 
-import { LANG, HEADER_DE } from "../data/products.js";
-
 describe("Settings", () => {
   beforeEach(async () => {
     await HomePage.open();

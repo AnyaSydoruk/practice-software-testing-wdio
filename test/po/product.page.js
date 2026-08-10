@@ -22,6 +22,10 @@ class ProductPage extends BasePage {
     return $('span[aria-label="category"]');
   }
 
+  get toast() {
+    return $("#toast-container");
+  }
+
   async getTitle() {
     await this.title.waitForDisplayed({ timeout: 15000 });
     return (await this.title.getText()).trim();
@@ -38,7 +42,11 @@ class ProductPage extends BasePage {
 
   async addToFavourites() {
     await this.clickOn(this.favouritesButton);
+    await this.toast.waitForDisplayed({
+      timeoutMsg: "No confirmation after adding to favourites",
+    });
   }
+
   async getBrand() {
     await this.brandBadge.waitForDisplayed();
     return (await this.brandBadge.getText()).trim();
