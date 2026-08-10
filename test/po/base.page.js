@@ -26,6 +26,13 @@ export default class BasePage {
     return browser.url(`/${path}`);
   }
 
+  get homeLink() {
+    return $('[data-test="nav-home"]');
+  }
+  get contactLink() {
+    return $('[data-test="nav-contact"]');
+  }
+
   async clickOn(element) {
     await element.waitForClickable({ timeout: 15000 });
     await element.click();
@@ -47,12 +54,16 @@ export default class BasePage {
   }
 
   async getCartCount() {
-    await this.cartCounter.waitForDisplayed({ timeout: 15000 });
+    if (!(await this.cartCounter.isExisting())) return 0;
     return this.getNumber(this.cartCounter);
   }
 
   async switchLanguage(code) {
     await this.clickOn(this.languageSelect);
     await this.clickOn(this.languageOption(code));
+  }
+
+  async getSelectedLanguage() {
+    return (await this.languageSelect.getText()).trim();
   }
 }

@@ -17,13 +17,9 @@ class CartPage extends BasePage {
     return $('[data-test="proceed-1"]');
   }
 
-  open() {
-    return super.open("checkout");
-  }
-
   async openFromIcon() {
     await this.clickOn(this.cartIcon);
-    await this.total.waitForDisplayed({ timeout: 15000 });
+    await this.total.waitForDisplayed();
   }
 
   async getProductTitles() {
@@ -38,14 +34,29 @@ class CartPage extends BasePage {
   async setQuantity(index, value) {
     const before = await this.getTotal();
     const inputs = await this.quantityInputs;
-    await inputs[index].click();
-    await browser.keys(["Meta", "a"]);
-    await inputs[index].setValue(String(value));
-    await browser.keys("Tab");
-    await browser.waitUntil(async () => (await this.getTotal()) !== before, {
-      timeout: 15000,
-      timeoutMsg: "Cart total did not recalculate",
-    });
+
+    await browser.execute(
+      (el, v) => {
+        const setter = Object.getOwnPropertyDescriptor(
+          window.HTMLInputElement.prototype,
+          "value",
+        ).set;
+        setter.call(el, String(v));
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+        el.blur();
+      },
+      inputs[index],
+      value,
+    );
+
+    await browser.waitUntil(
+      async () => {
+        const now = await this.getTotal();
+        return now !== before && now > 0;
+      },
+      { timeoutMsg: "Cart total did not recalculate" },
+    );
   }
 
   async getUnitPrice(index = 0) {

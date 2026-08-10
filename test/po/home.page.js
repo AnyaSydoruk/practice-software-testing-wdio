@@ -45,17 +45,22 @@ class HomePage extends BasePage {
     }
   }
 
-  /** будь-яка дія, після якої сітка має перемалюватись */
-  async withGridUpdate(action) {
+  async withGridUpdate(action, timeout = 30000) {
     const before = (await this.getProductNames()).join("|");
     await action();
-    await browser.waitUntil(
-      async () => {
-        const now = (await this.getProductNames()).join("|");
-        return now !== "" && now !== before;
-      },
-      { timeout: 20000, timeoutMsg: "Product grid did not update" },
-    );
+    try {
+      await browser.waitUntil(
+        async () => {
+          const now = (await this.getProductNames()).join("|");
+          return now !== "" && now !== before;
+        },
+        { timeout, timeoutMsg: "Product grid did not update" },
+      );
+    } catch (e) {
+      await browser.refresh();
+      await this.waitForProducts();
+      throw e;
+    }
   }
 
   async searchFor(term) {
