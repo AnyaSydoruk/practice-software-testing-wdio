@@ -4,7 +4,6 @@ import ElementList from "#core/elements/element.list.js";
 import AngularInput from "#core/elements/angular.input.js";
 import { waitForCondition } from "#core/utils/wait.helper.js";
 
-/** Basket contents. Reached from the header cart icon, so it has no static path. */
 class CartPage extends BaseAppPage {
   get uniqueElement() {
     return this.total;

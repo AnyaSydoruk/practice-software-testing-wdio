@@ -1,7 +1,6 @@
 import BaseAppPage from "#business/pages/base.app.page.js";
 import BaseElement from "#core/elements/base.element.js";
 
-/** Product details. Reached by navigation from the catalog, so it has no static path. */
 class ProductPage extends BaseAppPage {
   get uniqueElement() {
     return this.title;

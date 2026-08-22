@@ -1,12 +1,5 @@
 import Input from "#core/elements/input.js";
 
-/**
- * Input for Angular reactive forms.
- *
- * Angular binds to native "input"/"change" events, which WebDriver's setValue
- * does not reliably emit. The value is written through the native property
- * setter and the events are dispatched explicitly.
- */
 export default class AngularInput extends Input {
   async setValue(value) {
     const element = await this.waitForDisplayed();

@@ -1,20 +1,9 @@
 import { TIMEOUTS } from "#core/config/timeouts.js";
 
-/**
- * Lazy wrapper around a WebdriverIO element.
- *
- * The locator is resolved on every interaction, so a cached instance never
- * holds a stale reference. Every action waits for the element first, and the
- * element name is put into the timeout message to make failures readable.
- */
 export default class BaseElement {
   #locator;
   #name;
 
-  /**
-   * @param {string|Function} locator selector string, or a resolver function
-   * @param {string} [name] human readable name used in error messages
-   */
   constructor(locator, name) {
     this.#locator = locator;
     this.#name = name ?? String(locator);
@@ -71,7 +60,6 @@ export default class BaseElement {
     return (await element.getText()).trim();
   }
 
-  /** Text stripped down to its numeric part, e.g. "$14.50" becomes 14.5. */
   async getNumber() {
     return Number((await this.getText()).replace(/[^0-9.]/g, ""));
   }

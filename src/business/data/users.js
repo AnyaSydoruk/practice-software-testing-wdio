@@ -1,6 +1,5 @@
 import { getEnv } from "#core/config/env.js";
 
-/** Seeded account from the environment; read lazily so a missing .env fails loudly at use. */
 export const EXISTING_USER = {
   get email() {
     return getEnv("TEST_USER_EMAIL");
@@ -10,7 +9,6 @@ export const EXISTING_USER = {
   },
 };
 
-/** Builds a unique registrable user. */
 export const newUser = () => ({
   firstName: "Anna",
   lastName: "Test",

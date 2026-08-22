@@ -2,12 +2,6 @@ import BasePage from "#core/pages/base.page.js";
 import BaseElement from "#core/elements/base.element.js";
 import HeaderComponent from "#business/components/header.component.js";
 
-/**
- * Base for every page of the application.
- *
- * The header is composed in, not inherited: a page is not a kind of header,
- * it contains one.
- */
 export default class BaseAppPage extends BasePage {
   #header = new HeaderComponent();
 

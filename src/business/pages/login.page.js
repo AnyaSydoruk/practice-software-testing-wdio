@@ -24,7 +24,6 @@ class LoginPage extends BaseAppPage {
     return new BaseElement('[data-test="login-submit"]', "Login submit button");
   }
 
-  /** Fills the form and waits for the redirect to the account area. */
   async signIn({ email, password }) {
     await this.emailInput.setValue(email);
     await this.passwordInput.setValue(password);

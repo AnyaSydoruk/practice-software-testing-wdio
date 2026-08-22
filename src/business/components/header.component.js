@@ -1,10 +1,6 @@
 import BaseComponent from "#core/components/base.component.js";
 import BaseElement from "#core/elements/base.element.js";
 
-/**
- * Site-wide navigation bar: cart, categories, language switcher.
- * Present on every page, so every page composes it rather than inheriting it.
- */
 export default class HeaderComponent extends BaseComponent {
   constructor() {
     super("nav");
@@ -46,7 +42,6 @@ export default class HeaderComponent extends BaseComponent {
     await this.cartIcon.click();
   }
 
-  /** @returns {Promise<number>} 0 when the counter is not rendered yet */
   async getCartCount() {
     if (!(await this.cartCounter.isExisting())) {
       return 0;

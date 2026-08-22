@@ -65,7 +65,6 @@ class RegisterPage extends BaseAppPage {
     return new BaseElement('[data-test="register-submit"]', "Register submit button");
   }
 
-  /** Fills the form and waits for the redirect to the login page. */
   async register(user) {
     await this.firstNameInput.setValue(user.firstName);
     await this.lastNameInput.setValue(user.lastName);

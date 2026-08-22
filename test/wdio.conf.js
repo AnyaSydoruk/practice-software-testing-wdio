@@ -6,7 +6,6 @@ import { getEnv } from "#core/config/env.js";
 export const config = {
   runner: "local",
 
-  // Paths are relative to this file, which lives in the tests layer.
   specs: ["./specs/**/*.js"],
 
   maxInstances: 1,
@@ -28,18 +27,10 @@ export const config = {
     timeout: 60_000,
   },
 
-  /**
-   * Installs chai's should interface once per worker, so no spec has to
-   * repeat the call at module level.
-   */
   before: function () {
     should();
   },
 
-  /**
-   * Captures the failing state. The Allure reporter attaches screenshots
-   * taken during a test to the report on its own.
-   */
   afterTest: async function (test, context, { passed }) {
     if (!passed) {
       await browser.takeScreenshot();

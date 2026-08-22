@@ -49,7 +49,6 @@ class HomePage extends BaseAppPage {
     );
   }
 
-  /** The demo site occasionally serves an empty grid; one reload is allowed. */
   async waitForProducts(timeout = TIMEOUTS.LONG) {
     try {
       await this.productNames.waitForAny(timeout);
@@ -59,10 +58,6 @@ class HomePage extends BaseAppPage {
     }
   }
 
-  /**
-   * Runs an action that re-queries the catalog and waits for the grid to change.
-   * @param {() => Promise<void>} action
-   */
   async withGridUpdate(action, timeout = TIMEOUTS.LONG) {
     const namesBefore = (await this.getProductNames()).join("|");
 

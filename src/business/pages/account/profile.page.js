@@ -34,7 +34,6 @@ class ProfilePage extends BaseAppPage {
     return new BaseElement("app-profile .alert-danger", "Profile error alert");
   }
 
-  /** The form renders before it is populated, so the values are awaited too. */
   async waitForLoaded(timeout = TIMEOUTS.LONG) {
     await super.waitForLoaded(timeout);
     await waitForCondition(
