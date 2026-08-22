@@ -1,14 +1,13 @@
-import { should } from "chai";
-import LoginPage from "../po/login.page.js";
-import HomePage from "../po/home.page.js";
-import ProductPage from "../po/product.page.js";
-import CartPage from "../po/cart.page.js";
-import CheckoutPage from "../po/checkout.page.js";
-import { EXISTING_USER } from "../data/users.js";
-import { CART_PRODUCT } from "../data/products.js";
-import { BILLING_ADDRESS, PAYMENT_METHOD } from "../data/checkout.js";
-
-should();
+import LoginPage from "#business/pages/login.page.js";
+import CheckoutPage from "#business/pages/checkout.page.js";
+import { emptyCart, addProductToCart } from "#business/steps/cart.steps.js";
+import { placeOrder } from "#business/steps/checkout.steps.js";
+import { EXISTING_USER } from "#business/data/users.js";
+import { CART_PRODUCT } from "#business/data/constants/products.constants.js";
+import {
+  BILLING_ADDRESS,
+  PAYMENT_METHOD,
+} from "#business/data/constants/checkout.constants.js";
 
 describe("Checkout", () => {
   before(async () => {
@@ -16,29 +15,17 @@ describe("Checkout", () => {
   });
 
   after(async () => {
-    await HomePage.open();
-    await browser.execute(() => window.sessionStorage.clear());
+    await emptyCart();
   });
 
   describe("Scenario: User completes checkout for items in the basket", () => {
     it("should confirm the order", async () => {
-      await HomePage.open();
-      await browser.execute(() => window.sessionStorage.clear());
-      await browser.refresh();
-      await HomePage.waitForProducts();
-      await HomePage.searchFor(CART_PRODUCT.name);
-      await HomePage.openProduct(CART_PRODUCT.name);
-      await ProductPage.addToCart();
+      await emptyCart();
+      await addProductToCart(CART_PRODUCT.name);
 
-      await CartPage.openFromIcon();
-      await CartPage.proceedToCheckout();
-      await CheckoutPage.proceedToAddress(EXISTING_USER);
-      await CheckoutPage.fillAddress(BILLING_ADDRESS);
-      await CheckoutPage.pay(PAYMENT_METHOD);
+      await placeOrder(EXISTING_USER, BILLING_ADDRESS, PAYMENT_METHOD);
 
-      (await CheckoutPage.getSuccessMessage()).should.contain(
-        "Payment was successful",
-      );
+      (await CheckoutPage.getSuccessMessage()).should.contain("Payment was successful");
     });
   });
 });

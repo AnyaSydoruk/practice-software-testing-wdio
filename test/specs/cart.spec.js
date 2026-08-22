@@ -1,28 +1,22 @@
-import { should } from "chai";
-import HomePage from "../po/home.page.js";
-import ProductPage from "../po/product.page.js";
-import CartPage from "../po/cart.page.js";
-import { CART_PRODUCT } from "../data/products.js";
-
-should();
+import ProductPage from "#business/pages/product.page.js";
+import CartPage from "#business/pages/cart.page.js";
+import { emptyCart, addProductToCart } from "#business/steps/cart.steps.js";
+import { openProductByName } from "#business/steps/catalog.steps.js";
+import { CART_PRODUCT } from "#business/data/constants/products.constants.js";
 
 describe("Cart", () => {
   beforeEach(async () => {
-    await HomePage.open();
-    await browser.execute(() => window.sessionStorage.clear());
-    await browser.refresh();
-    await HomePage.waitForProducts();
-    await HomePage.searchFor(CART_PRODUCT.name);
-    await HomePage.openProduct(CART_PRODUCT.name);
+    await emptyCart();
   });
 
   describe("Scenario: User adds a product to the basket from the product details page", () => {
     it("should show the added product in the basket", async () => {
+      await openProductByName(CART_PRODUCT.name);
       const title = await ProductPage.getTitle();
 
       await ProductPage.addToCart();
 
-      (await ProductPage.getCartCount()).should.equal(1);
+      (await ProductPage.header.getCartCount()).should.equal(1);
       await CartPage.openFromIcon();
       (await CartPage.getProductTitles()).should.include(title);
     });
@@ -30,8 +24,7 @@ describe("Cart", () => {
 
   describe("Scenario: User updates the quantity of a product in the basket", () => {
     it("should reflect the new quantity and recalculate the order total", async () => {
-      // Given the user has a product in the basket
-      await ProductPage.addToCart();
+      await addProductToCart(CART_PRODUCT.name);
       await CartPage.openFromIcon();
       const unitPrice = await CartPage.getUnitPrice(0);
 

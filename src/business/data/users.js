@@ -1,12 +1,18 @@
+import { getEnv } from "#core/config/env.js";
+
 export const EXISTING_USER = {
-  email: process.env.TEST_USER_EMAIL,
-  password: process.env.TEST_USER_PASSWORD,
+  get email() {
+    return getEnv("TEST_USER_EMAIL");
+  },
+  get password() {
+    return getEnv("TEST_USER_PASSWORD");
+  },
 };
 
 export const newUser = () => ({
   firstName: "Anna",
   lastName: "Test",
-  dob: "1991-01-19",
+  dateOfBirth: "1991-01-19",
   country: "US",
   postalCode: "44000",
   houseNumber: "44",

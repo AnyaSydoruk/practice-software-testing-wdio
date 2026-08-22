@@ -1,16 +1,17 @@
 {
   "name": "practice-software-testing-wdio",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "wdio run ./wdio.conf.js",
-    "wdio": "wdio run ./wdio.conf.js"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "UI test automation framework for practicesoftwaretesting.com",
   "license": "ISC",
-  "description": "",
+  "type": "module",
+  "imports": {
+    "#core/*": "./src/core/*",
+    "#business/*": "./src/business/*"
+  },
+  "scripts": {
+    "test": "wdio run ./test/wdio.conf.js",
+    "wdio": "wdio run ./test/wdio.conf.js"
+  },
   "devDependencies": {
     "@wdio/allure-reporter": "^9.30.1",
     "@wdio/cli": "^9.30.1",
