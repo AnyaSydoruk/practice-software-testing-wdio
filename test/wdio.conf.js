@@ -2,6 +2,9 @@ import "dotenv/config";
 import { should } from "chai";
 import { TIMEOUTS } from "#core/config/timeouts.js";
 import { getEnv } from "#core/config/env.js";
+import { ReportAggregator } from "wdio-html-nice-reporter";
+
+let reportAggregator;
 
 export const config = {
   runner: "local",
@@ -20,7 +23,34 @@ export const config = {
   connectionRetryCount: 3,
 
   framework: "mocha",
-  reporters: ["spec", ["allure", { outputDir: "allure-results" }]],
+  reporters: [
+    "spec",
+    ["allure", { outputDir: "allure-results" }],
+    [
+      "html-nice",
+      {
+        outputDir: "./reports/html",
+        filename: "report.html",
+        reportTitle: "WDIO Test Report",
+        showInBrowser: false,
+        collapseTests: false,
+      },
+    ],
+  ],
+
+  onPrepare: function (config, capabilities) {
+    reportAggregator = new ReportAggregator({
+      outputDir: "./reports/html/",
+      filename: "report.html",
+      reportTitle: "WDIO Test Report",
+      browserName: capabilities[0]?.browserName || "chrome",
+      collapseTests: false,
+    });
+    reportAggregator.clean();
+  },
+  onComplete: function (exitCode, config, capabilities, results) {
+    return reportAggregator.createReport();
+  },
 
   mochaOpts: {
     ui: "bdd",
