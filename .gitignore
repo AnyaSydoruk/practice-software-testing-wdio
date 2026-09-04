@@ -5,3 +5,4 @@ logs/
 errorShots/
 .env
 .DS_Store
+reports/
